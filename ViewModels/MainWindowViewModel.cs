@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace UmaFanCountChecker
 {
@@ -24,6 +25,10 @@ namespace UmaFanCountChecker
 
         public MainWindowViewModel()
         {
+            var assembly = Assembly.GetEntryAssembly() ?? throw new Exception();
+            
+            Title.Value = $"ウマ娘ファン数調べ太郎 {assembly.GetName().Version}";
+
             CopyListCommand.Subscribe(() =>
             {
                 Clipboard.SetText(TsvText.Value);
@@ -35,6 +40,8 @@ namespace UmaFanCountChecker
                 UpdateTabSeparatedText();
             }).AddTo(Disposable);
         }
+
+        public ReactiveProperty<string> Title { get; } = new ReactiveProperty<string>();
 
         public ReactiveProperty<BitmapSource> CapturedBitmap { get; } = new ReactiveProperty<BitmapSource>();
 
