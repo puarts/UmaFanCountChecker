@@ -1,0 +1,132 @@
+﻿<Window
+    x:Class="UmaFanCountChecker.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:UmaFanCountChecker"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="ウマ娘ファン数調べ太郎"
+    Width="366"
+    Height="591"
+    Closed="Window_Closed"
+    KeyboardNavigation.ControlTabNavigation="None"
+    mc:Ignorable="d">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{Binding CaptureHeight.Value}" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="30" />
+            </Grid.ColumnDefinitions>
+            <Image Source="{Binding CapturedBitmap.Value}" />
+            <Slider
+                Grid.Column="1"
+                Maximum="{Binding CropRateBottom.Value, Converter={x:Static local:OneMinusValueConverter.Instance}}"
+                Minimum="0"
+                Orientation="Vertical"
+                Value="{Binding CropVerticalOffset.Value}" />
+        </Grid>
+        <TabControl Grid.Row="1">
+            <TabItem Header="メイン">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+                    <TextBox
+                        Grid.Row="0"
+                        IsReadOnly="True"
+                        Text="{Binding TsvInfo.Value}" />
+
+                    <TextBox
+                        x:Name="fanCountList"
+                        Grid.Row="1"
+                        AcceptsReturn="True"
+                        IsReadOnly="True"
+                        Text="{Binding TsvText.Value}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                    <Button Grid.Row="2" Command="{Binding CopyListCommand}">
+                        一覧をコピー(Excel等に貼り付けて下さい)
+                    </Button>
+                    <Button Grid.Row="3" Command="{Binding ClearListCommand}">
+                        クリア
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="詳細設定">
+                <StackPanel>
+                    <GroupBox Header="解析する画像範囲">
+                        <StackPanel>
+                            <Label>上部の切り取り割合</Label>
+                            <local:SliderBox
+                                Maximum="1"
+                                Minimum="0"
+                                Value="{Binding CropRateTop.Value}" />
+                            <Label>下部の切り取り割合</Label>
+                            <local:SliderBox
+                                Maximum="1"
+                                Minimum="0"
+                                Value="{Binding CropRateBottom.Value}" />
+                            <Label>左の切り取り割合</Label>
+                            <local:SliderBox
+                                Maximum="1"
+                                Minimum="0"
+                                Value="{Binding CropRateLeft.Value}" />
+                            <Label>右の切り取り割合</Label>
+                            <local:SliderBox
+                                Maximum="1"
+                                Minimum="0"
+                                Value="{Binding CropRateRight.Value}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="その他">
+                        <StackPanel>
+                            <Label>キャプチャ間隔(ミリ秒)</Label>
+                            <local:SliderBox
+                                Interval="1"
+                                Maximum="1000"
+                                Minimum="30"
+                                Value="{Binding CaptureIntervalMilliseconds.Value}" />
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="デバッグ">
+                <StackPanel Orientation="Vertical">
+                    <Label>キャプチャ画像のサイズ</Label>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox
+                            Width="50"
+                            IsReadOnly="True"
+                            Text="{Binding CaptureWidth.Value}" />
+                        <TextBox
+                            Width="50"
+                            IsReadOnly="True"
+                            Text="{Binding CaptureHeight.Value}" />
+                    </StackPanel>
+                    <Label>OCR結果</Label>
+                    <TextBox
+                        AcceptsReturn="True"
+                        IsReadOnly="True"
+                        Text="{Binding RecognizedText.Value}"
+                        TextWrapping="Wrap" />
+                    <Label>ログ</Label>
+                    <TextBox
+                        Height="100"
+                        AcceptsReturn="True"
+                        IsReadOnly="True"
+                        Text="{Binding Log.Value}" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
