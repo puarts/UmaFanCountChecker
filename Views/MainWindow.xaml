@@ -33,7 +33,7 @@
                 Value="{Binding CropVerticalOffset.Value}" />
         </Grid>
         <TabControl Grid.Row="1">
-            <TabItem Header="メイン">
+            <TabItem Header="抽出結果">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30" />
